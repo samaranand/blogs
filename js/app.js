@@ -39,5 +39,6 @@ const fetchData = async () =>{
     }
 }
 
+console.log('hey')
 
 fetchData();
