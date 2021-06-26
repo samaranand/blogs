@@ -28,7 +28,7 @@ const _createdAt = (v) =>{
 const readContent = (el)=>{
     return `<h1 class="mb-1">${el.title}</h1>
 <div class="text-muted mb-2">${_createdAt(el.createdAt)}</div>
-<a href="#" onclick="onNav('/'); return false;" class="btn btn-secondary">All Articles</a>
+<a href="#" onclick="onNav('/blogs'); return false;" class="btn btn-secondary">All Articles</a>
 <hr/>
 
 <div class="container">
@@ -54,7 +54,7 @@ const getElUI = (e) =>{
                     <div class="card-text mb-2">
                         ${e.description}
                     </div>
-                    <a href="#" onclick="onNav('/read/${e.slug}'); return false;" class="btn btn-primary">Read More</a>
+                    <a href="#" onclick="onNav('/blogs/${e.slug}'); return false;" class="btn btn-primary">Read More</a>
                 </div>
             </div>`
 }
@@ -80,6 +80,47 @@ const homeContent = ()=>{
     }
 }
 
+
+
+
+// console.log(window.location.pathname)
+
+
+
+const onNav = pathname =>{
+    if(pathname==='/'){
+        onNav('/blogs')
+    }
+    if(pathname==='/blogs/' || pathname==='/blogs'){
+        window.history.pushState(
+            {},
+            pathname,
+            window.location.origin+pathname
+        )
+        root.innerHTML = homeContent()
+    } else {
+        const tmpPath = pathname.split('/')
+        const slug = tmpPath[2]
+        const t = res.filter(e=> e.slug === slug)
+        if(t.length>0){
+            window.history.pushState(
+                {},
+                pathname,
+                window.location.origin+pathname
+            )
+            // pathname = '/read'
+            root.innerHTML = readContent(t[0])
+        }
+        
+    }
+}
+
+window.onpopstate = () => {
+    console.log('pop' + window.location.pathname)
+    onNav(window.location.pathname)
+    // root.innerHTML = routes[window.location.pathname]
+}
+
 const fetchData = async () =>{
     const val = await fetch(url+'api');
     const re = await val.json()
@@ -92,51 +133,5 @@ const fetchData = async () =>{
     // }
 }
 
-console.log('hey')
 
 fetchData();
-
-
-
-
-const routes = {
-    '/': homeContent,
-    '/read':readContent
-}
-
-// console.log(window.location.pathname)
-
-
-
-const onNav = pathname =>{
-    if(pathname==='/'){
-        window.history.pushState(
-            {},
-            pathname,
-            window.location.origin+pathname
-        )
-        root.innerHTML = routes[pathname]()
-    } else {
-        const tmpPath = pathname.split('/')
-        const slug = tmpPath[2]
-        const t = res.filter(e=> e.slug === slug)
-        if(t.length>0){
-            window.history.pushState(
-                {},
-                pathname,
-                window.location.origin+pathname
-            )
-            pathname = '/read'
-            root.innerHTML = routes[pathname](t[0])
-        }
-        
-    }
-}
-
-window.onpopstate = () => {
-    console.log('pop' + window.location.pathname)
-    onNav(window.location.pathname)
-    // root.innerHTML = routes[window.location.pathname]
-}
-
-// window.
