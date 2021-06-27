@@ -27,13 +27,20 @@ const _createdAt = (v) =>{
 
 const readContent = (el)=>{
     return `<h1 class="mb-1">${el.title}</h1>
+    <h6 class="my-1">${el.description}</h6>
 <div class="text-muted mb-2">${_createdAt(el.createdAt)}</div>
 <a href="#" onclick="onNav('/blogs'); return false;" class="btn btn-secondary">All Articles</a>
 <hr/>
 
 <div class="container">
     ${el.data}
-</div>`
+</div>
+<div class="mt-4" style="font-weight: 500;">
+<i>That's all for today guys. Hope this article is helpful for u.
+    Know me more on <a href="http://samaranand.github.io/">My Portfolio</a></i>
+    <h5 class="mt-3"><i>Thank you, See you soon !!</i></h5>
+</div>
+`
 
 }
 
@@ -110,6 +117,8 @@ const onNav = pathname =>{
             )
             // pathname = '/read'
             root.innerHTML = readContent(t[0])
+        } else{
+            onNav('/blogs')
         }
         
     }
@@ -135,3 +144,13 @@ const fetchData = async () =>{
 
 
 fetchData();
+
+// location.reload(()=>{
+//     console.log('pagre reloaded')
+// })
+
+if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
+    console.info( "This page is reloaded" );
+  } else {
+    console.info( "This page is not reloaded");
+  }
