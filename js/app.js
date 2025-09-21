@@ -145,3 +145,53 @@ const fetchData = async () =>{
 
 fetchData();
 
+function apply(code) {
+    let splitIndex = code.length;
+    for (let i = code.length - 1; i >= 0; i--) {
+        if (!isNaN(code[i]) && code[i] !== ' ') {
+            splitIndex = i;
+        } else {
+            break;
+        }
+    }
+    const chars = code.slice(0, splitIndex);
+    const numbers = code.slice(splitIndex);
+
+    function shiftedChars(word) {
+        return word.split('').map((char, index) => {
+            const shift = index % 2 === 0 ? 1 : -1;
+            if (/[a-zA-Z]/.test(char)) {
+                let base = char >= 'a' ? 'a'.charCodeAt(0) : 'A'.charCodeAt(0);
+                let offset = (char.charCodeAt(0) - base + shift + 26) % 26;
+                return String.fromCharCode(base + offset);
+            }
+            if (/[0-9]/.test(char)) {
+                let offset = (parseInt(char) + shift + 10) % 10;
+                return offset.toString();
+            }
+            return char;
+        }).join('');
+    }
+
+    return shiftedChars(chars) + shiftedChars(numbers);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('applyInput');
+    const btn = document.getElementById('applyBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const result = document.getElementById('applyResult');
+    if (input && btn && result) {
+        btn.addEventListener('click', function() {
+            const val = input.value;
+            result.textContent = val ? apply(val) : '';
+        });
+    }
+    if (input && clearBtn && result) {
+        clearBtn.addEventListener('click', function() {
+            input.value = '';
+            result.textContent = '';
+        });
+    }
+});
+
